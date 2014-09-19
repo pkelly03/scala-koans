@@ -7,7 +7,7 @@ class AboutLists extends KoanSuite {
   koan("Eq tests identity (same object)") {
     val a = List(1, 2, 3)
     val b = List(1, 2, 3)
-    (a eq b) should be(true)
+    (a eq b) should be(false)
   }
 
   koan("== tests equality (same content)") {
@@ -70,7 +70,7 @@ class AboutLists extends KoanSuite {
     a.toString should equal("List(1, 3, 5, 7, 9)")
 
     // map a function to double the numbers over the list
-    a.map {v => v * 2} should equal(List(1, 6, 10, 14, 18))
+    a.map {v => v * 2} should equal(List(2, 6, 10, 14, 18))
 
     // filter any values divisible by 3 in the list
     a.filter {v => v % 3 == 0} should equal(List(3, 9))
@@ -101,15 +101,15 @@ class AboutLists extends KoanSuite {
   koan("Foldleft is like reduce, but with an explicit starting value") {
     val a = List(1, 3, 5, 7)
     // NOTE: foldLeft uses a form called currying that we will explore later
-    a.foldLeft(0)(_ + _) should equal(__)
-    a.foldLeft(10)(_ + _) should equal(__)
-    a.foldLeft(1)(_ * _) should equal(__)
-    a.foldLeft(0)(_ * _) should equal(__)
+    a.foldLeft(0)(_ + _) should equal(16)
+    a.foldLeft(10)(_ + _) should equal(26)
+    a.foldLeft(1)(_ * _) should equal(105)
+    a.foldLeft(0)(_ * _) should equal(0)
   }
 
   koan("You can create a list from a range") {
     val a = (1 to 5).toList
-    a should be(List(__, __, __, __, __))
+    a should be(List(1, 2, 3, 4, 5))
   }
 
   koan("Lists reuse their tails") {
@@ -118,10 +118,10 @@ class AboutLists extends KoanSuite {
     val b = 2 :: c
     val a = 1 :: b
 
-    a should be(List(__, __, __))
-    a.tail should be(__)
-    b.tail should be(__)
-    c.tail should be(__)
+    a should be(List(1, 2, 3))
+    a.tail should be(List(2,3))
+    b.tail should be(List(3))
+    c.tail should be(List())
   }
 
 
