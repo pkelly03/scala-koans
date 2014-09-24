@@ -67,7 +67,6 @@ class AboutMaps extends KoanSuite {
     // what happens if you change the Any to Int
   }
 
-
   koan("Maps may be accessed") {
     val myMap = Map("MI" -> "Michigan", "OH" -> "Ohio", "WI" -> "Wisconsin", "IA" -> "Iowa")
     myMap("MI") should be("Michigan")

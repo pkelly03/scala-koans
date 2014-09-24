@@ -31,7 +31,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val fruitBasket = new MyContainer(new Orange())
-    fruitBasket.contents should be(__)
+    fruitBasket.contents should be("Orange")
   }
 
 
@@ -48,8 +48,8 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
       def contents = manifest.runtimeClass.getSimpleName
     }
 
-    val fruitBasket = new MyContainer[Fruit](new Orange())
-    fruitBasket.contents should be(__)
+    val fruitBasket = new MyContainer[Orange](new Orange())
+    fruitBasket.contents should be("Orange")
   }
 
   koan("You can coerece your object to a type.") {
@@ -66,7 +66,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val fruitBasket: MyContainer[Fruit] = new MyContainer(new Orange())
-    fruitBasket.contents should be(__)
+    fruitBasket.contents should be("Fruit")
   }
 
 // That one probably blew your mind. Now if you assign a type to the instantiation,
@@ -97,6 +97,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
   koan("covariance lets you specify the container of that type or parent type") {
 
     class MyContainer[+A](a: A)(implicit manifest: scala.reflect.Manifest[A]) {
+
       private[this] val item = a
 
       def get = item
@@ -105,7 +106,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val fruitBasket: MyContainer[Fruit] = new MyContainer[Orange](new Orange())
-    fruitBasket.contents should be(__)
+    fruitBasket.contents should be("Orange")
   }
 
 // The problem with covariance is that you can't mutate, set, or change the object since
@@ -115,7 +116,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
   koan("mutating an object is not allowed with covariance") {
 
     class MyContainer[+A](a: A)(implicit manifest: scala.reflect.Manifest[A]) {
-      private[this] val item = a
+      private val item = a
 
       def get = item
 
@@ -123,10 +124,10 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val fruitBasket: MyContainer[Fruit] = new MyContainer[Orange](new Orange())
-    fruitBasket.contents should be(__)
+    fruitBasket.contents should be("Orange")
 
     class NavelOrange extends Orange //Creating a subtype to prove a point
-    //    val navelOrangeBasket: MyContainer[NavelOrange] = new MyContainer[Orange](new Orange()) //Bad!
+//        val navelOrangeBasket: MyContainer[NavelOrange] = new MyContainer[Orange](new Orange()) //Bad!
     //    val tangeloBasket: MyContainer[Tangelo] = new MyContainer[Orange](new Orange()) //Bad!
   }
 
@@ -148,14 +149,14 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val citrusBasket: MyContainer[Citrus] = new MyContainer[Citrus](new Orange)
-    citrusBasket.contents should be(__)
+    citrusBasket.contents should be("Citrus")
     val orangeBasket: MyContainer[Orange] = new MyContainer[Citrus](new Tangelo)
-    orangeBasket.contents should be(__)
+    orangeBasket.contents should be("Citrus")
     val tangeloBasket: MyContainer[Tangelo] = new MyContainer[Citrus](new Orange)
-    tangeloBasket.contents should be(__)
+    tangeloBasket.contents should be("Citrus")
 
     val orangeBasketReally: MyContainer[Orange] = tangeloBasket.asInstanceOf[MyContainer[Orange]]
-    orangeBasketReally.contents should be(__)
+    orangeBasketReally.contents should be("Citrus")
     orangeBasketReally.set(new Orange())
   }
 
@@ -167,6 +168,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
   koan("A reference to a parent type means you cannot anticipate getting a more specific type") {
 
     class MyContainer[-A](a: A)(implicit manifest: scala.reflect.Manifest[A]) {
+
       private[this] var item = a
 
       def set(a: A) {
@@ -177,11 +179,11 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val citrusBasket: MyContainer[Citrus] = new MyContainer[Citrus](new Orange)
-    citrusBasket.contents should be(__)
+    citrusBasket.contents should be("Citrus")
     val orangeBasket: MyContainer[Orange] = new MyContainer[Citrus](new Tangelo)
-    orangeBasket.contents should be(__)
+    orangeBasket.contents should be("Citrus")
     val tangeloBasket: MyContainer[Tangelo] = new MyContainer[Citrus](new Orange)
-    tangeloBasket.contents should be(__)
+    tangeloBasket.contents should be("Citrus")
   }
 
 // Declaring neither -/+, indicates invariance variance.  You cannot use a superclass
@@ -204,7 +206,7 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     }
 
     val citrusBasket: MyContainer[Citrus] = new MyContainer[Citrus](new Orange)
-    citrusBasket.contents should be(__)
+    citrusBasket.contents should be("Citrus")
   }
 
 
@@ -225,9 +227,9 @@ class AboutTypeVariance extends KoanSuite with ShouldMatchers {
     val citrusBasket: MyContainer[Citrus] = new MyContainer[Citrus](new Orange)
 
     citrusBasket.set(new Orange)
-    citrusBasket.contents should be(__)
+    citrusBasket.contents should be("Citrus")
 
     citrusBasket.set(new Tangelo)
-    citrusBasket.contents should be(__)
+    citrusBasket.contents should be("Citrus")
   }
 }
